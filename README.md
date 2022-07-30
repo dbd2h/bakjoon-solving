@@ -1,6 +1,4 @@
 # bakjoon-solving
-<<<<<<< HEAD
-=======
 
 </br>
 <div class="tt_article_useless_p_margin contents_style">
@@ -1194,4 +1192,3 @@
     <li><a href="https://www.acmicpc.net/problem/10786">Catering</a></li>
   </ul>
 </div>
->>>>>>> 3914056750d71bcb70a0eb82f36524b84feede7e
