@@ -1,3 +1,1 @@
 # bakjoon-solving
-
-test
