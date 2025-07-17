@@ -1,0 +1,322 @@
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int line;
+    cin>>line;
+    char bomboni[line][line];
+    for(int i=0;i<line;i++)
+    {
+        for(int j=0;j<line;j++)
+        {
+            cin>>bomboni[i][j];
+        }
+    }
+    int max=1;
+    int tot=1;
+    char nowColor='X';
+    for(int i=0;i<line;i++)
+    {
+        for(int j=0;j<line;j++)
+        {
+            if(bomboni[i][j]!=nowColor)
+            {
+                nowColor=bomboni[i][j];
+                tot=1;
+            }
+            else
+            {
+                tot++;
+                if(tot>max)
+                {
+                    max=tot;
+                }
+            }
+        }
+        nowColor='X';
+        for(int j=0;j<line;j++)
+        {
+            if(bomboni[j][i]!=nowColor)
+            {
+                nowColor=bomboni[j][i];
+                tot=1;
+            }
+            else
+            {
+                tot++;
+                if(tot>max)
+                {
+                    max=tot;
+                }
+            }
+        }
+        nowColor='X';
+    }
+    nowColor='X';
+    tot=1;
+    for(int i=0;i<line-1;i++)
+    {
+        for(int j=0;j<line;j++)
+        {
+            //행끼리 바꾸기 (세로줄 체인지) arr[i][k]
+            for(int k=0;k<line;k++)
+            {
+                if(j!=k)
+                {
+                    if(nowColor!=bomboni[i][k])
+                    {
+                        nowColor=bomboni[i][k];
+                        tot=1;
+                    }
+                    else
+                    {
+                        tot++;
+                        if(max<tot)
+                        {
+                            max=tot;
+                        }
+                    }
+                }
+                else
+                {
+                    if(nowColor!=bomboni[i+1][k])
+                    {
+                        nowColor=bomboni[i+1][k];
+                        tot=1;
+                    }
+                    else
+                    {
+                        tot++;
+                        if(max<tot)
+                        {
+                            max=tot;
+                        }
+                    }
+                }
+            }
+            nowColor='X';
+            for(int k=0;k<line;k++)
+            {
+                if(j!=k)
+                {
+                    if(nowColor!=bomboni[i+1][k])
+                    {
+                        nowColor=bomboni[i+1][k];
+                        tot=1;
+                    }
+                    else
+                    {
+                        tot++;
+                        if(max<tot)
+                        {
+                            max=tot;
+                        }
+                    }
+                }
+                else
+                {
+                    if(nowColor!=bomboni[i][k])
+                    {
+                        nowColor=bomboni[i][k];
+                        tot=1;
+                    }
+                    else
+                    {
+                        tot++;
+                        if(max<tot)
+                        {
+                            max=tot;
+                        }
+                    }
+                }
+            }
+            nowColor='X';
+            for(int k=0;k<line;k++)
+            {
+                if(k==i)
+                {
+                    if(nowColor!=bomboni[k+1][j])
+                    {
+                        nowColor=bomboni[k+1][j];
+                        tot=1;
+                    }
+                    else
+                    {
+                        tot++;
+                        if(max<tot)
+                        {
+                            max=tot;
+                        }
+                    }
+                }
+                else if(k==i+1)
+                {
+                    if(nowColor!=bomboni[k-1][j])
+                    {
+                        nowColor=bomboni[k-1][j];
+                        tot=1;
+                    }
+                    else
+                    {
+                        tot++;
+                        if(max<tot)
+                        {
+                            max=tot;
+                        }
+                    }
+                }
+                else
+                {
+                    if(nowColor!=bomboni[k][j])
+                    {
+                        nowColor=bomboni[k][j];
+                        tot=1;
+                    }
+                    else
+                    {
+                        tot++;
+                        if(max<tot)
+                        {
+                            max=tot;
+                        }
+                    }
+                }
+            }
+            nowColor='X';
+        }
+        for(int j=0;j<line;j++)
+        {
+            //열끼리 바꾸기 (가로줄 체인지) arr[k][i]
+            for(int k=0;k<line;k++)
+            {
+                if(j!=k)
+                {
+                    if(nowColor!=bomboni[k][i])
+                    {
+                        nowColor=bomboni[k][i];
+                        tot=1;
+                    }
+                    else
+                    {
+                        tot++;
+                        if(max<tot)
+                        {
+                            max=tot;
+                        }
+                    }
+                }
+                else
+                {
+                    if(nowColor!=bomboni[k][i+1])
+                    {
+                        nowColor=bomboni[k][i+1];
+                        tot=1;
+                    }
+                    else
+                    {
+                        tot++;
+                        if(max<tot)
+                        {
+                            max=tot;
+                        }
+                    }
+                }
+            }
+            nowColor='X';
+            for(int k=0;k<line;k++)
+            {
+                if(j!=k)
+                {
+                    if(nowColor!=bomboni[k][i+1])
+                    {
+                        nowColor=bomboni[k][i+1];
+                        tot=1;
+                    }
+                    else
+                    {
+                        tot++;
+                        if(max<tot)
+                        {
+                            max=tot;
+                        }
+                    }
+                }
+                else
+                {
+                    if(nowColor!=bomboni[k][i])
+                    {
+                        nowColor=bomboni[k][i];
+                        tot=1;
+                    }
+                    else
+                    {
+                        tot++;
+                        if(max<tot)
+                        {
+                            max=tot;
+                        }
+                    }
+                }
+            }
+            nowColor='X';
+            for(int k=0;k<line;k++)
+            {
+                if(k==i)
+                {
+                    if(nowColor!=bomboni[j][k+1])
+                    {
+                        nowColor=bomboni[j][k+1];
+                        tot=1;
+                    }
+                    else
+                    {
+                        tot++;
+                        if(max<tot)
+                        {
+                            max=tot;
+                        }
+                    }
+                }
+                else if(k==i+1)
+                {
+                    if(nowColor!=bomboni[j][k-1])
+                    {
+                        nowColor=bomboni[j][k-1];
+                        tot=1;
+                    }
+                    else
+                    {
+                        tot++;
+                        if(max<tot)
+                        {
+                            max=tot;
+                        }
+                    }
+                }
+                else
+                {
+                    if(nowColor!=bomboni[j][k])
+                    {
+                        nowColor=bomboni[j][k];
+                        tot=1;
+                    }
+                    else
+                    {
+                        tot++;
+                        if(max<tot)
+                        {
+                            max=tot;
+                        }
+                    }
+                }
+            }
+            nowColor='X';
+        }
+
+    }
+
+    cout<<max;
+}
+
