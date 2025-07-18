@@ -73,5 +73,9 @@
     "execution": "cpp",
     "print": "cpp",
     "algorithm": "cpp"
-  }
+  },
+  "C_Cpp.default.compilerPath": "C:/mingw64/bin/g++.exe",
+  "C_Cpp.default.intelliSenseMode": "windows-gcc-x64",
+  "C_Cpp.default.cStandard": "c23",
+  "C_Cpp.default.cppStandard": "c++23"
 }

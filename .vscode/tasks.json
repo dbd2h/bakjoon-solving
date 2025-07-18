@@ -1,26 +1,41 @@
 {
+  "version": "2.0.0",
+  "runner": "terminal",
+  "type": "shell",
+  "echoCommand": true,
+  "presentation": { "reveal": "always" },
   "tasks": [
+    // C++ 컴파일
     {
-      "type": "cppbuild",
-      "label": "C/C++: g++ 활성 파일 빌드",
-      "command": "/usr/local/bin/g++",
+      "label": "save and compile for C++",
+      "command": "g++ -std=c++23",
       "args": [
-        "-fdiagnostics-color=always",
-        "-g",
         "${file}",
+        "-g",
         "-o",
         "${fileDirname}/${fileBasenameNoExtension}"
       ],
-      "options": {
-        "cwd": "${fileDirname}"
-      },
-      "problemMatcher": ["$gcc"],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
-      "detail": "디버거에서 생성된 작업입니다."
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": {
+        "fileLocation": ["relative", "${workspaceRoot}"],
+        "pattern": {
+          "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "message": 5
+        }
+      }
+    },
+    // 바이너리 실행 (Windows)
+    {
+      "label": "execute",
+      "command": "cmd",
+      "group": { "kind": "test", "isDefault": true },
+      "args": ["/C", "${fileDirname}\\${fileBasenameNoExtension}"]
     }
-  ],
-  "version": "2.0.0"
+  ]
 }
+
+// c++ 설치는 https://dntmdgns03.tistory.com/113 이후에 폴더 위치 정도만 수정하기
