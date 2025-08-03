@@ -1,5 +1,6 @@
 {
   "files.associations": {
+    "*.html": "html",
     "__bit_reference": "cpp",
     "__bits": "cpp",
     "__config": "cpp",
@@ -72,10 +73,24 @@
     "__verbose_abort": "cpp",
     "execution": "cpp",
     "print": "cpp",
-    "algorithm": "cpp"
+    "algorithm": "cpp",
+    "charconv": "cpp",
+    "map": "cpp",
+    "set": "cpp",
+    "functional": "cpp",
+    "iterator": "cpp",
+    "memory_resource": "cpp",
+    "utility": "cpp",
+    "format": "cpp",
+    "span": "cpp",
+    "text_encoding": "cpp",
+    "regex": "cpp"
   },
   "C_Cpp.default.compilerPath": "C:/mingw64/bin/g++.exe",
   "C_Cpp.default.intelliSenseMode": "windows-gcc-x64",
   "C_Cpp.default.cStandard": "c23",
-  "C_Cpp.default.cppStandard": "c++23"
+  "C_Cpp.default.cppStandard": "c++23",
+  "C_Cpp.copilotHover": "disabled",
+  "C_Cpp.intelliSenseEngine": "default",
+  "C_Cpp.intelliSenseCacheSize": 0
 }
