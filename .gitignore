@@ -1,10 +1,10 @@
+
+
+*
+
+!*.*
 *.exe
-
-# *
-
-# !*.*
-
-# !*/
+!*/
 
 tempCodeRunnerFile.cpp
 
