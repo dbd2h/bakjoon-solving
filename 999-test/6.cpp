@@ -1,6 +1,10 @@
 #include <iostream>
 
+using namespace std;
+
 int main()
 {
-    std::cout<<-1%100;
+    int n1=-100;
+    int n2=1000;
+    cout<<(n1^n2);
 }
