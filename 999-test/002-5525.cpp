@@ -1,35 +1,40 @@
-#include <iostream>
-#include <string>
-
+#include <bits/stdc++.h>
+ 
 using namespace std;
-
-int main()
-{
-    int n,m;
-    cin>>n>>m;
+ 
+void solve() {
+    int n;
     string s;
-    cin>>s;
-    int count=0;
-    for(int i=0;i<m;i++)
-    {
-        int IOICount=0;
-        if(s[i]=='I')
-        {
-            while(i+2<m)
-            {
-                if(s[i+1]=='O' && s[i+2]=='I')
-                {
-                    IOICount++;
-                    i+=2;
-                }
-                else
-                    break;
-            }
-            if(IOICount>=n)
-            {
-                count+=IOICount-n+1;
-            }
+    cin >> n >> s;
+    int a = count(s.begin(), s.end(), 'a');
+    int b = n - a;
+    int need = a - b;
+    map<int, int> mp;
+    mp[0] = -1;
+    int cur = 0;
+    int ans = n;
+    for (int i = 0; i < n; i++) {
+        cur += s[i] == 'a';
+        cur -= s[i] == 'b';
+        if (mp.count(cur - need)) {
+            ans = min(ans, i - mp[cur - need]);
         }
+        mp[cur] = i;
     }
-    cout<<count;
+    if (ans == n) ans = -1;
+    if (need == 0) ans = 0;
+    cout << ans << "\n";
+}
+ 
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+ 
+    int T;
+    cin >> T;
+    while (T--) {
+        solve();
+    }
+ 
+    return 0;
 }

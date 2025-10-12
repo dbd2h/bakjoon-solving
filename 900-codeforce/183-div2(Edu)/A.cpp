@@ -11,7 +11,11 @@ using namespace std;
 
 void program()
 {
-
+    int n;
+    cin>>n;
+    int res=n%3;
+    if(res==0) cout<<0<<"\n";
+    else cout<<3-res<<"\n";
 }
 
 int main()
