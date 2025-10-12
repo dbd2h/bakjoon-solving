@@ -1,146 +1,66 @@
-#include <algorithm>
 #include <iostream>
 #include <string>
-#include <vector>
-#include <queue>
+
+typedef long long ll;
+
 using namespace std;
 
-int len[5000];
-int cnt[300001];
-vector<pair<int,int>> v;
-struct Trie 
+ll MOD=1'000'003;
+
+int main()
 {
-	vector<pair<char, Trie*>> NODE;
-	int prefix;
-	Trie* fail;
-	Trie() 
+    int n,s,e,t;
+    cin>>n>>s>>e>>t;
+    ll graph[50][50]={0};
+    ll res[50][50]={0};
+    for(int i=0;i<n*5;i++)
+    {
+        if(i%5==0) continue;
+        graph[i][i-1]=1;
+    }
+    for(int i=0;i<n;i++)
+    {
+        string s;
+        cin>>s;
+        for(int j=0;j<s.size();j++)
+        {
+            int cur=s[j]-'0';
+            if(cur==0) continue;
+            graph[i*5][j*5+cur-1]=1;
+        }
+    }
+    for(int i=0;i<n*5;i++)
 	{
-		prefix = -1;
-		NODE.clear();
-		fail = NULL;
-	}
-	void insert(const char* s, int num) 
-	{
-		if (!*s) 
+		for(int j=0;j<n*5;j++)
 		{
-			prefix = num;
-			return;
+			res[i][j]=graph[i][j];
 		}
-		int now = *s - 'a';
-		for (auto& i : NODE) 
-		{
-			if (i.first == now) return i.second->insert(s + 1, num);
-		}
-		NODE.push_back({ now, new Trie() });
-		NODE.back().second->insert(s + 1, num);
 	}
-	void aho() 
+	for(int c=1;c<=t;c++)
 	{
-		queue<Trie*> q;
-		q.push(this);
-		while (!q.empty()) 
+		ll resC[50][50];
+		for(int i=0;i<n*5;i++)
 		{
-			Trie* now = q.front(); 
-			q.pop();
-			for (auto& i : now->NODE) 
+			for(int j=0;j<n*5;j++)
 			{
-				Trie* next = i.second;
-				if (now == this) next->fail = this;
-				else 
+				ll sum=0;
+				for(int k=0;k<n*5;k++)
 				{
-					Trie* dest = now->fail;
-					while (dest != this) {
-						bool flag = true;
-						for (auto j : dest->NODE) 
-						{
-							if (j.first == i.first) 
-							{
-								flag = false;
-								break;
-							}
-						}
-						if (!flag) break;
-						dest = dest->fail;
-					}
-					for (auto j : dest->NODE) 
-					{
-						if (j.first == i.first) 
-						{
-							dest = j.second;
-							break;
-						}
-					}
-					next->fail = dest;
+					sum+=res[i][k]*graph[k][j];
 				}
-				if (next->fail->prefix>=0) 
-				{
-					if (next->prefix == -1 || (len[next->fail->prefix] > len[next->prefix])) next->prefix = next->fail->prefix;
-				}
-				q.push(next);
+				resC[i][j]=sum;
+				resC[i][j]%=MOD;
 			}
 		}
-	}
-	void query(string s)
-	{
-		Trie* cur = this;
-		for (int i = 0; i < s.size(); i++) 
+		for(int i=0;i<n*5;i++)
 		{
-			int now = s[i] - 'a';
-			while (cur != this) 
+			for(int j=0;j<n*5;j++)
 			{
-				bool flag = true;
-				for (auto j : cur->NODE)
-				{
-					if (j.first == now)
-					{
-						flag = false; 
-						break;
-					}
-				}
-				if (!flag) break;
-				cur = cur->fail;
+				res[i][j]=resC[i][j];
+				cout<<res[i][j];
 			}
-			for (auto j : cur->NODE) 
-			{
-				if (j.first == now) 
-				{
-					cur = j.second;
-					break;
-				}
-			}
-			if (cur->prefix >= 0) v.push_back({ i - len[cur->prefix] + 1, i });
+			cout<<"\n";
 		}
+		cout<<"\n";
 	}
-};
-int main(void) 
-{
-	cin.tie(0); 
-	cout.tie(0);
-	ios::sync_with_stdio(false); 
-	Trie* Root = new Trie();
-	int n; 
-	cin >> n;
-	string s; 
-	cin >> s;
-	int m; 
-	cin >> m;
-	vector<string> tile(m);
-	for (int i = 0; i < m; i++) 
-	{
-		cin >> tile[i];
-		len[i] = tile[i].size();
-		Root->insert(tile[i].c_str(), i);
-	}
-	Root->aho();
-	Root->query(s);
-	sort(v.begin(),v.end());
-	int last = -1;
-	int ans = 0;
-	for (int i = 0; i < v.size(); i++)
-	{
-		if (last < v[i].first) ans += v[i].first - last-1;
-		last = max(last, v[i].second);
-	}
-	ans += s.size() - 1 - last;
-	cout << ans;
 }
