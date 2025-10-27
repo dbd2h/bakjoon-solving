@@ -1,23 +1,15 @@
 #include <iostream>
 #include <string>
+#include <queue>
 
 using namespace std;
 
 int main()
 {
-    int n=10;
-    int w=20;
-    char b[2000];
-    cin>>b;
-    char c[2000];
-    for(int i=0;i<n;i++)
-    {
-        c[i]=b[i];
-    }
-    for(int i=0;i<w-n;i++)
-    {
-        string s=c+i;
-        cout<<s<<" "<<s.size()<<"\n";
-        c[n+i]=b[n+i];
-    }
+    queue<int> q;
+    q.push(1);
+    q.push(2);
+    queue<int> &cq=q;
+    cq.pop();
+    cout<<q.size();
 }
