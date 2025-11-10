@@ -1,11 +1,13 @@
 #include <iostream>
 #include <string>
-#include <queue>
 
 using namespace std;
 
 int main()
 {
-    int num=-7;
-    cout<<num%3;
+    string s;
+    cin>>s;
+    int n;
+    cin>>n;
+    cout<<s[n-1];
 }
