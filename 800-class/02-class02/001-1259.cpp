@@ -7,7 +7,7 @@ int main()
 {
     string s;
     cin>>s;
-    while(!(s.size()==1 && s[0]=='0'))
+    while(s!="0")
     {
         int l=0;
         int r=s.size()-1;
