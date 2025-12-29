@@ -31,7 +31,7 @@ void recurF(bool arr[][10], int idx, int sumV, int *res)
         int sumV1=sumV;
         for(int i=1;i<=idx;i++)
         {
-            if(arr[idx-i][i-1]==1)
+            if(arr[idx-i][i-1])
             {
                 arr1[i]=1;
                 turnOn(arr,idx-i,i);
@@ -51,7 +51,7 @@ void recurF(bool arr[][10], int idx, int sumV, int *res)
         int sumV2=sumV+1;
         for(int i=1;i<=idx;i++)
         {
-            if(arr[idx-i][i-1]==1)
+            if(arr[idx-i][i-1])
             {
                 arr2[i]=1;
                 turnOn(arr,idx-i,i);
@@ -71,25 +71,25 @@ void recurF(bool arr[][10], int idx, int sumV, int *res)
         int sumV1=sumV;
         for(int i=idx-9;i<10;i++)
         {
-            if(arr[idx-i-1][i])
+            if(arr[idx-i][i-1])
             {
                 arr1[i]=1;
                 turnOn(arr,idx-i,i);
                 sumV1++;
             }
         }
-        if(arr[idx-10][9])
+        if(arr[idx-10][9] || (idx==18 && arr[9][9]))
         {
             for(int i=idx-9;i<10;i++)
             {
-                if(arr1[i]==1) turnOn(arr,idx-1,i);
+                if(arr1[i]==1) turnOn(arr,idx-i,i);
             }
             return;
         }
         recurF(arr,idx+1,sumV1,res);
         for(int i=idx-9;i<10;i++)
         {
-            if(arr1[i]==1) turnOn(arr,idx-1,i);
+            if(arr1[i]==1) turnOn(arr,idx-i,i);
         }
         return;
     }
