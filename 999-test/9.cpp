@@ -7,7 +7,7 @@ using namespace std;
 
 int main()
 {
-    int arr[10]={4,3,1,2,0};
-    sort(arr,arr+2);
-    cout<<arr[1];
+    int a=2e9;
+    int b=2e8;
+    cout<<a+b;
 }
