@@ -1,18 +1,17 @@
 #include <iostream>
-#include <queue>
 #include <vector>
-#define INF 1e9
+#include <queue>
 
-typedef long long ll;
+#define LEN 10001
+
+#define INF 1e9
 
 using namespace std;
 
-vector<int> graph[101];
-int lmatch[101]={0};
-int rmatch[101]={0};
-int dist[101];
-bool leftN[101]={0};
-bool rightN[101]={0};
+vector<int> graph[LEN];
+int lmatch[LEN]={0};
+int rmatch[LEN]={0};
+int dist[LEN];
 
 bool bfs(int n)
 {
@@ -61,34 +60,14 @@ bool dfs(int cur)
     return false;
 }
 
-void resMaker(int cur, bool isL)
-{
-    if(isL)
-    {
-        if(leftN[cur]) return;
-        leftN[cur]=1;
-        for(auto& next : graph[cur])
-        {
-            if(lmatch[cur]==next) continue;
-            resMaker(next,!isL);
-            return;
-        }
-        return;
-    }
-    else
-    {
-        if(rightN[cur]) return;
-        rightN[cur]=1;
-        resMaker(rmatch[cur],!isL);
-        return;
-    }
-}
-
 int main()
 {
-    ll n,d;
-    cin>>n>>d;
-    for(int i=0;i<d;i++)
+    ios_base :: sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    int n,m;
+    cin>>n>>m;
+    for(int i=0;i<m;i++)
     {
         int a,b;
         cin>>a>>b;
@@ -102,16 +81,5 @@ int main()
             if(lmatch[i]==0 && dfs(i)) res++;
         }
     }
-    for(int i=1;i<=n;i++)
-    {
-        if(lmatch[i]==0) resMaker(i,1);
-    }
-    vector<int> resV;
-    for(int i=1;i<=n;i++) if(leftN[i]==1) resV.push_back(i);
-    cout<<n-res<<"\n";
-    for(auto& i : resV)
-    {
-        if(rightN[i]) continue;
-        cout<<i<<" ";
-    }
+    cout<<n-res;
 }

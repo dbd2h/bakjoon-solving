@@ -1,48 +1,50 @@
-#include <iostream>
-#include <cmath>
-
+#include <bits/stdc++.h>
+#define x first
+#define y second
+#define all(v) v.begin(), v.end()
+#define compress(v) sort(all(v)), v.erase(unique(all(v)), v.end())
 using namespace std;
 
-long double dotToDot(int x, int y, int a, int b){
-    return round(sqrt(pow(x-a, 2)+pow(y-b, 2))*10)/10;
-}
+typedef long long ll;
 
-long double findLen(int x1, int y1, int x2, int y2, int a, int b){
-    long double min=dotToDot(x1,y1,a,b);
-    min = min>dotToDot(x2,y2,a,b) ? dotToDot(x2,y2,a,b) : min;
-    if(x1==x2){
-        if(!((y1>=b && y2>=b)||(y1<=b && y2<=b))) return abs(x1-a);
+int n;
+int x[10101], y[10101];
+int bias = 555;
+vector<int> g[2020];
+
+int par[2020], chk[2020];
+int x_chk[555], y_chk[555];
+
+int dfs(int v){
+    chk[v] = 1;
+    for(auto i : g[v]){
+        if(chk[i]) continue; chk[i] = 1;
+        if(par[i] == -1 || dfs(par[i])){
+            par[i] = v; return 1;
+        }
     }
-    else{
-        if(!((x1>=a && x2>=a)||(x1<=a && x2<=a))) return abs(y1-b);
-    }
-    return min;
+    return 0;
 }
 
 int main(){
-    int x1,y1,x2,y2,a1,b1,a2,b2;
-    cin>>x1>>y1>>x2>>y2>>a1>>b1>>a2>>b2;
-    if(x1==x2 && b1==b2){
-        if((y1<=b1 && y2>=b1)||(y1>=b1 && y2<=b1))
-        {
-            if((x1<=a1 && x1>=a2) || (x1>=a1 && x1<=a2)){
-                cout<<0;
-                return 0;
-            }
-        }
+    ios_base::sync_with_stdio(false); cin.tie(nullptr);
+    cin >> n;
+    for(int i=1; i<=n; i++){
+        cin >> x[i] >> y[i];
+        g[x[i]].push_back(y[i]+bias);
+        x_chk[x[i]] = y_chk[y[i]] = 1;
     }
-    else if(y1==y2 && a1==a2){
-        if((x1<=a1 && x2>=a1)||(x1>=a1 && x2<=a1))
-        {
-            if((y1<=b1 && y1>=b2) || (y1>=b1 && y1<=b2)){
-                cout<<0;
-                return 0;
-            }
-        }
-    }
-    long double min=findLen(x1,y1,x2,y2,a1,b1);
-    min = min>findLen(x1,y1,x2,y2,a2,b2) ? findLen(x1,y1,x2,y2,a2,b2) : min;
-    min = min>findLen(a1,b1,a2,b2,x2,y2) ? findLen(a1,b1,a2,b2,x2,y2) : min;
-    min = min>findLen(a1,b1,a2,b2,x1,y1) ? findLen(a1,b1,a2,b2,x1,y1) : min;
-    cout<<min;
-}   
+    for(int i=0; i<2020; i++) compress(g[i]);
+
+    int match = 0;
+    memset(par, -1, sizeof par);
+    for(int i=1; i<=500; i++){
+        memset(chk, 0, sizeof chk);
+        match += dfs(i);
+    } 
+
+    int a = 0, b = 0;
+    for(int i=1; i<=500; i++) a += x_chk[i], b += y_chk[i];
+    if(a == match && b == match) cout << "Slavko";
+    else cout << "Mirko";
+}

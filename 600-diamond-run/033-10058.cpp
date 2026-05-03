@@ -71,35 +71,42 @@ void resMaker(int cur, bool isL)
         {
             if(lmatch[cur]==next) continue;
             resMaker(next,!isL);
-            return;
         }
-        return;
     }
     else
     {
         if(rightN[cur]) return;
         rightN[cur]=1;
         resMaker(rmatch[cur],!isL);
-        return;
     }
+    return;
 }
 
 int main()
 {
     ll n,d;
     cin>>n>>d;
-    for(int i=0;i<d;i++)
+    ll arr[101][101];
+    ll coor[101][2];
+    for(int i=1;i<=n;i++)
     {
-        int a,b;
-        cin>>a>>b;
-        graph[a].push_back(b);
+        cin>>coor[i][0]>>coor[i][1];
     }
-    int res=0;
-    while(bfs(n))
+    for(int i=1;i<=n;i++)
     {
-        for(int i=1;i<=n;i++)
+        for(int j=i+1;j<=n;j++)
         {
-            if(lmatch[i]==0 && dfs(i)) res++;
+            ll x=coor[i][0]-coor[j][0];
+            ll y=coor[i][1]-coor[j][1];
+            arr[i][j]=x*x+y*y;
+        }
+    }
+    ll c=d*d;
+    for(int i=1;i<=n;i++)
+    {
+        for(int j=i+1;j<=n;j++)
+        {
+            if(c<arr[i][j]) graph[i].push_back(j);
         }
     }
     for(int i=1;i<=n;i++)
@@ -108,7 +115,13 @@ int main()
     }
     vector<int> resV;
     for(int i=1;i<=n;i++) if(leftN[i]==1) resV.push_back(i);
-    cout<<n-res<<"\n";
+    int res=0;
+    for(auto& i : resV)
+    {
+        if(rightN[i]) continue;
+        res++;
+    }
+    cout<<res<<"\n";
     for(auto& i : resV)
     {
         if(rightN[i]) continue;

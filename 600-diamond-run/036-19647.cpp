@@ -2,17 +2,16 @@
 #include <queue>
 #include <vector>
 #define INF 1e9
-
-typedef long long ll;
+#define LEN 1001
 
 using namespace std;
 
-vector<int> graph[101];
-int lmatch[101]={0};
-int rmatch[101]={0};
-int dist[101];
-bool leftN[101]={0};
-bool rightN[101]={0};
+vector<int> graph[1001];
+int lmatch[1001]={0};
+int rmatch[1001]={0};
+int dist[1001];
+bool leftN[1001]={0};
+bool rightN[1001]={0};
 
 bool bfs(int n)
 {
@@ -61,38 +60,40 @@ bool dfs(int cur)
     return false;
 }
 
-void resMaker(int cur, bool isL)
+bool resF(int cur, int lN, int rN, bool check[])
 {
-    if(isL)
+    for(auto& r : graph[cur])
     {
-        if(leftN[cur]) return;
-        leftN[cur]=1;
-        for(auto& next : graph[cur])
+        if(lN==cur && rN==r) continue;
+        if(check[r]) continue;
+        int l=rmatch[r];
+        if(l==0)
         {
-            if(lmatch[cur]==next) continue;
-            resMaker(next,!isL);
-            return;
+            return true;
         }
-        return;
+        else
+        {
+            check[r]=1;
+            if(resF(l,lN,rN,check)) return true;
+        }
     }
-    else
-    {
-        if(rightN[cur]) return;
-        rightN[cur]=1;
-        resMaker(rmatch[cur],!isL);
-        return;
-    }
+    return false;
 }
 
 int main()
 {
-    ll n,d;
-    cin>>n>>d;
-    for(int i=0;i<d;i++)
+    int n;
+    cin>>n;
+    for(int i=1;i<=n;i++)
     {
-        int a,b;
-        cin>>a>>b;
-        graph[a].push_back(b);
+        int c;
+        cin>>c;
+        for(int j=0;j<c;j++)
+        {
+            int ans;
+            cin>>ans;
+            graph[i].push_back(ans);
+        }
     }
     int res=0;
     while(bfs(n))
@@ -102,16 +103,25 @@ int main()
             if(lmatch[i]==0 && dfs(i)) res++;
         }
     }
+    if(n!=res)
+    {
+        cout<<-1;
+        return 0;
+    }
     for(int i=1;i<=n;i++)
     {
-        if(lmatch[i]==0) resMaker(i,1);
+        bool check[1001]={0};
+        rmatch[lmatch[i]]=0;
+        if(resF(i,i,lmatch[i],check)) 
+        {
+            cout<<-1;
+            return 0;
+        }
+        rmatch[lmatch[i]]=i;
     }
-    vector<int> resV;
-    for(int i=1;i<=n;i++) if(leftN[i]==1) resV.push_back(i);
-    cout<<n-res<<"\n";
-    for(auto& i : resV)
+    cout<<"1\n";
+    for(int i=1;i<=n;i++)
     {
-        if(rightN[i]) continue;
-        cout<<i<<" ";
+        cout<<lmatch[i]<<" ";
     }
 }

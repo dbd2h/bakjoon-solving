@@ -1,25 +1,24 @@
 #include <iostream>
-#include <queue>
+#include <map>
 #include <vector>
-#define INF 1e9
+#include <queue>
+#define INF 1e18
 
 typedef long long ll;
 
 using namespace std;
 
-vector<int> graph[101];
-int lmatch[101]={0};
-int rmatch[101]={0};
-int dist[101];
-bool leftN[101]={0};
-bool rightN[101]={0};
+vector<ll> graph[2501];
+ll lmatch[2501];
+map<ll, int> rmatch;
+ll dist[2501];
 
 bool bfs(int n)
 {
     queue<int> q;
     for(int i=1;i<=n;i++)
     {
-        if(lmatch[i]==0)
+        if(lmatch[i]==INF)
         {
             q.push(i);
             dist[i]=0;
@@ -61,57 +60,47 @@ bool dfs(int cur)
     return false;
 }
 
-void resMaker(int cur, bool isL)
-{
-    if(isL)
-    {
-        if(leftN[cur]) return;
-        leftN[cur]=1;
-        for(auto& next : graph[cur])
-        {
-            if(lmatch[cur]==next) continue;
-            resMaker(next,!isL);
-            return;
-        }
-        return;
-    }
-    else
-    {
-        if(rightN[cur]) return;
-        rightN[cur]=1;
-        resMaker(rmatch[cur],!isL);
-        return;
-    }
-}
-
 int main()
 {
-    ll n,d;
-    cin>>n>>d;
-    for(int i=0;i<d;i++)
+    int n;
+    cin>>n;
+    ll numArr[2501][2];
+    for(int i=1;i<=n;i++)
     {
-        int a,b;
-        cin>>a>>b;
-        graph[a].push_back(b);
+        cin>>numArr[i][0]>>numArr[i][1];
+        graph[i].push_back((ll)numArr[i][0]+(ll)numArr[i][1]);
+        graph[i].push_back((ll)numArr[i][0]-(ll)numArr[i][1]);
+        graph[i].push_back((ll)numArr[i][0]*(ll)numArr[i][1]);
     }
     int res=0;
+    for(int i=1;i<=n;i++) lmatch[i]=INF;
     while(bfs(n))
     {
         for(int i=1;i<=n;i++)
         {
-            if(lmatch[i]==0 && dfs(i)) res++;
+            if(lmatch[i]==INF && dfs(i)) res++;
         }
+    }
+    if(res!=n)
+    {
+        cout<<"impossible";
+        return 0;
     }
     for(int i=1;i<=n;i++)
     {
-        if(lmatch[i]==0) resMaker(i,1);
-    }
-    vector<int> resV;
-    for(int i=1;i<=n;i++) if(leftN[i]==1) resV.push_back(i);
-    cout<<n-res<<"\n";
-    for(auto& i : resV)
-    {
-        if(rightN[i]) continue;
-        cout<<i<<" ";
+        ll a=numArr[i][0];
+        ll b=numArr[i][1];
+        if(a+b==lmatch[i])
+        {
+            cout<<a<<" + "<<b<<" = "<<lmatch[i]<<"\n";
+        }
+        else if(a-b==lmatch[i])
+        {
+            cout<<a<<" - "<<b<<" = "<<lmatch[i]<<"\n";
+        }
+        else if(a*b==lmatch[i])
+        {
+            cout<<a<<" * "<<b<<" = "<<lmatch[i]<<"\n";
+        }
     }
 }
