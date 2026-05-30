@@ -1,67 +1,97 @@
-#include <stdio.h>
-#include <string.h>
-#define MOD 100000
+#include <iostream>
+#include <vector>
+#include <stack>
+#include <algorithm>
 
-int cache[200][200];
-char s[201], ovf;
+#define LEN 10001
 
-int dp(int l, int r) {
-	int i;
-	long long res = 0, t;
-	if (l > r) return 1;
-	if (cache[l][r] != -1) return cache[l][r];
-	
-	if (s[l] < 0 || (1 <= s[r] && s[r] <= 3)) return 0;
-	for (i = l + 1 ; i <= r ; i += 2) {
-		if (s[l] == 5 || s[i] == 5) {
-			if (s[l] == 5 && s[i] == 5) {
-				if (t = dp(i + 1, r)) {
-					res += (long long)3 * dp(l + 1, i - 1) * t;
-					if (res >= MOD) ovf = 1, res %= MOD;
-				}
-			}
-			else if ((s[l] == 5 && s[i] < 0) || (s[l] > 0 && s[i] == 5)) {
-				if (t = dp(i + 1, r)) {
-					res += (long long)dp(l + 1, i - 1) * t;
-					if (res >= MOD) ovf = 1, res %= MOD;
-				}
-			}
-		}
-		else if (s[i] == -s[l]) {
-			if (t = dp(i + 1, r)) {
-				res += (long long)dp(l + 1, i - 1) * t;
-				if (res >= MOD) ovf = 1, res %= MOD;
-			}
-		}
-	}
+using namespace std;
 
-	return cache[l][r] = (int)res;
+vector<int> graph[LEN];
+int tin[LEN]={0};
+int low[LEN];
+bool inStack[LEN]={0};
+stack<int> st;
+int timer=0;
+int sccArr[LEN];
+int sccI=0;
+vector<int> resV[LEN];
+
+void dfs(int cur)
+{
+    st.push(cur);
+    inStack[cur]=1;
+    timer++;
+    tin[cur]=timer;
+    low[cur]=timer;
+    for(auto& next : graph[cur])
+    {
+        if(tin[next]==0)
+        {
+            dfs(next);
+            low[cur]=min(low[cur],low[next]);
+        }
+        else if(inStack[next])
+        {
+            low[cur]=min(low[cur],tin[next]);
+        }
+    }
+    if(low[cur]==tin[cur])
+    {
+        sccI++;
+        while(st.top()!=cur)
+        {
+            sccArr[st.top()]=sccI;
+            inStack[st.top()]=0;
+            st.pop();
+        }
+        sccArr[st.top()]=sccI;
+        inStack[st.top()]=0;
+        st.pop();
+    }
 }
 
-int main() {
-	int n, r;
+int cmp(pair<int,int> p1, pair<int,int> p2)
+{
+    return p1.first<p2.first;
+}
 
-	scanf("%d%s", &n, s);
-	
-	if (n & 1) {
-		printf("0");
-		return 0;
-	}
-	memset(cache, 0xff, sizeof(cache));
-	
-	for (n = 0 ; s[n] ; n++) {
-		switch (s[n]) {
-			case '(' : s[n] = 1; break;
-			case ')' : s[n] = -1; break;
-			case '[' : s[n] = 2; break;
-			case ']' : s[n] = -2; break;
-			case '{' : s[n] = 3; break;
-			case '}' : s[n] = -3; break;
-			case '?' : s[n] = 5;
-		}
-	}
-	
-	r = dp(0, n - 1);
-	if (ovf) printf("%05d", r);
-	else printf("%d", r);
+int main()
+{
+    int v,e;
+    cin>>v>>e;
+    for(int i=1;i<=e;i++)
+    {
+        int a,b;
+        cin>>a>>b;
+        graph[a].push_back(b);
+    }
+    for(int i=1;i<=v;i++)
+    {
+        if(tin[i]!=0) continue;
+        dfs(i);
+    }
+    int len=0;
+    for(int i=1;i<=v;i++)
+    {
+        int idx=sccArr[i];
+        if(len<idx) len=idx;
+        resV[idx].push_back(i);
+    }
+    vector<pair<int,int>> idxV;
+    for(int i=1;i<=len;i++)
+    {
+        idxV.push_back({resV[i][0], i});
+    }
+    sort(idxV.begin(), idxV.end(), cmp);
+    cout<<len<<"\n";
+    for(int i=0;i<len;i++)
+    {
+        int idx=idxV[i].second;
+        for(auto& num : resV[idx])
+        {
+            cout<<num<<" ";
+        }
+        cout<<-1<<"\n";
+    }
 }
