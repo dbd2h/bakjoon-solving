@@ -12,7 +12,19 @@ using namespace std;
 
 void program()
 {
-    
+    ll modV=676767677;
+    int n;
+    cin>>n;
+    int arr[100];
+    for(int i=0;i<n;i++) cin>>arr[i];
+    ll res=0;
+    if(arr[n-1]==1) res+=1;
+    for(int i=0;i<n;i++)
+    {
+        if(arr[i]==1) continue;
+        res+=arr[i];
+    }
+    cout<<res<<"\n";
 }
 
 int main()

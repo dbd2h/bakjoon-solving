@@ -12,7 +12,20 @@ using namespace std;
 
 void program()
 {
-    
+    int n;
+    cin>>n;
+    ll arr[200000];
+    for(int i=0;i<n;i++) cin>>arr[i];
+    int res=0;
+    for(int i=n-1;i>=0;i--)
+    {
+        if(i!=n-1)
+        {
+            if(arr[i+1]>0) arr[i]+=arr[i+1];
+        }
+        if(arr[i]>0) res++;
+    }
+    cout<<res<<"\n";
 }
 
 int main()
