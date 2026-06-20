@@ -1,97 +1,47 @@
 #include <iostream>
+#include <string>
 #include <vector>
-#include <stack>
 #include <algorithm>
-
-#define LEN 10001
+#include <queue>
+#include <stack>
+#include <map>
+typedef long long ll;
+typedef long double lld;
 
 using namespace std;
 
-vector<int> graph[LEN];
-int tin[LEN]={0};
-int low[LEN];
-bool inStack[LEN]={0};
-stack<int> st;
-int timer=0;
-int sccArr[LEN];
-int sccI=0;
-vector<int> resV[LEN];
-
-void dfs(int cur)
+void program()
 {
-    st.push(cur);
-    inStack[cur]=1;
-    timer++;
-    tin[cur]=timer;
-    low[cur]=timer;
-    for(auto& next : graph[cur])
+    string s;
+    cin>>s;
+    int x=0; // 4의 개수 + 1,3의 개수
+    int y=0; // 4의 개수 + 2의 개수 or 지금까지 최소로 지우는 수
+    for(int i=0;i<s.size();i++)
     {
-        if(tin[next]==0)
+        int cur=s[i]-'0';
+        if(cur==4)
         {
-            dfs(next);
-            low[cur]=min(low[cur],low[next]);
+            x++;
+            y++;
         }
-        else if(inStack[next])
+        else if(cur%2==1)
         {
-            low[cur]=min(low[cur],tin[next]);
+            y=min(x,y); // 이때 최소로 지우는 수 기록
+            x++;
         }
+        else y++; // 이때는 최소로 지우는 수, 2의 개수
     }
-    if(low[cur]==tin[cur])
-    {
-        sccI++;
-        while(st.top()!=cur)
-        {
-            sccArr[st.top()]=sccI;
-            inStack[st.top()]=0;
-            st.pop();
-        }
-        sccArr[st.top()]=sccI;
-        inStack[st.top()]=0;
-        st.pop();
-    }
-}
-
-int cmp(pair<int,int> p1, pair<int,int> p2)
-{
-    return p1.first<p2.first;
+    cout<<min(x,y)<<"\n";
 }
 
 int main()
 {
-    int v,e;
-    cin>>v>>e;
-    for(int i=1;i<=e;i++)
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    int t;
+    cin>>t;
+    for(int i=0;i<t;i++)
     {
-        int a,b;
-        cin>>a>>b;
-        graph[a].push_back(b);
-    }
-    for(int i=1;i<=v;i++)
-    {
-        if(tin[i]!=0) continue;
-        dfs(i);
-    }
-    int len=0;
-    for(int i=1;i<=v;i++)
-    {
-        int idx=sccArr[i];
-        if(len<idx) len=idx;
-        resV[idx].push_back(i);
-    }
-    vector<pair<int,int>> idxV;
-    for(int i=1;i<=len;i++)
-    {
-        idxV.push_back({resV[i][0], i});
-    }
-    sort(idxV.begin(), idxV.end(), cmp);
-    cout<<len<<"\n";
-    for(int i=0;i<len;i++)
-    {
-        int idx=idxV[i].second;
-        for(auto& num : resV[idx])
-        {
-            cout<<num<<" ";
-        }
-        cout<<-1<<"\n";
+        program();
     }
 }

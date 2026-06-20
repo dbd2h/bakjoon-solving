@@ -16,19 +16,14 @@ void program()
 {
     string s;
     cin>>s;
-    int dp[LEN];
     int res=0;
     int len=s.size();
-    for(int i=0;i<len;i++)
-    {
-        if(s[i]=='4') res++;
-    }
     int odd=0;
     int even=0;
     for(int i=0;i<len;i++)
     {
         int cur=s[i]-'0';
-        if(cur==4) continue;
+        if(cur==4) res++;
         else if(cur==2)
         {
             even++;
