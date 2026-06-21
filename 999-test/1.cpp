@@ -8,30 +8,51 @@
 typedef long long ll;
 typedef long double lld;
 
+#define LEN 100000
+
 using namespace std;
 
 void program()
 {
-    string s;
-    cin>>s;
-    int x=0; // 4의 개수 + 1,3의 개수
-    int y=0; // 4의 개수 + 2의 개수 or 지금까지 최소로 지우는 수
-    for(int i=0;i<s.size();i++)
+    int n;
+    cin>>n;
+    int arr[2][LEN];
+    for(int i=0;i<n;i++) cin>>arr[0][i];
+    for(int i=0;i<n;i++) cin>>arr[1][i];
+    int l=1;
+    int r=n*2;
+    while(l<=r)
     {
-        int cur=s[i]-'0';
-        if(cur==4)
+        bool bitArr[2][LEN];
+        int middle=(l+r)/2;
+        for(int i=0;i<n*2;i++)
         {
-            x++;
-            y++;
+            if(arr[i/n][i%n]>=middle) bitArr[i/n][i%n]=1;
+            else bitArr[i/n][i%n]=0;
         }
-        else if(cur%2==1)
+        int c=0;
+        bool befZero=0;
+        for(int i=0;i<n;i++)
         {
-            y=min(x,y); // 이때 최소로 지우는 수 기록
-            x++;
+            int cur=bitArr[0][i]+bitArr[1][i];
+
+            if(cur==1) continue;
+            else if(cur==0)
+            {
+                if(befZero) continue;
+                befZero=1;
+                c--;
+            }
+            else if(cur==2)
+            {
+                c++;
+                befZero=0;
+            }
         }
-        else y++; // 이때는 최소로 지우는 수, 2의 개수
+        if(c>0) l=middle+1;
+        else r=middle-1;
     }
-    cout<<min(x,y)<<"\n";
+    cout<<l-1<<"\n";
 }
 
 int main()

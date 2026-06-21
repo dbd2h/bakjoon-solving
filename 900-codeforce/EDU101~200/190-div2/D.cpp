@@ -13,8 +13,8 @@ typedef long double lld;
 using namespace std;
 
 int arrA[LEN];
-int nextA[LEN];
-int leftEpiA[LEN];
+int nextA[LEN]; // 지금 에피소드 다음 에피소드의 위치. 인덱스: 일차, 값: 다음 에피소드 일차
+int leftEpiA[LEN]; // 현재 인덱스 기준 오른쪽에 있으면서 가장 가까이에 있는 에피소드 위치. 인덱스: 에피소드, 값: 에피소드의 일차
 int arrB[LEN];
 int nextB[LEN];
 int leftEpiB[LEN];
