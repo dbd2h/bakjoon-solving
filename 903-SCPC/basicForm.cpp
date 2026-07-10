@@ -25,5 +25,6 @@ int main()
     {
         cout<<"Case #"<<i<<"\n";
         program();
+        std::cout.flush();
     }
 }
