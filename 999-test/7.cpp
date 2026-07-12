@@ -1,16 +1,20 @@
 #include <iostream>
-#include <deque>
+#include <vector>
+#include <algorithm>
 
 using namespace std;
 
 int main()
 {
-    deque<int> a;
-    a.push_back(1);
-    a.push_back(2);
-    deque<int> b;
-    b=a;
-    cout<<b.front()<<"\n";
-    b.pop_back();
-    cout<<a.back()<<" "<<b.back();
+    int n;
+    cin>>n;
+    vector<int> v;
+    for(int i=0;i<n;i++)
+    {
+        int num;
+        cin>>num;
+        v.push_back(num);
+    }
+    v.erase(unique(v.begin(),v.end()),v.end());
+    for(int i=0;i<v.size();i++) cout<<v[i]<<" ";
 }
