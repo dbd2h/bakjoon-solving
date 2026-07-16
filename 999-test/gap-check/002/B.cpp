@@ -5,25 +5,18 @@
 #include <queue>
 #include <stack>
 #include <map>
-#include <set>
 typedef long long ll;
 typedef long double lld;
 
 using namespace std;
 
-void program()
-{
-    
-}
-
 int main()
 {
-    ios::sync_with_stdio(0);
-    cin.tie(0);
-    int t;
-    cin>>t;
-    for(int i=0;i<t;i++)
-    {
-        program();
-    }
+    int a,b,x,y;
+    cin>>a>>b>>x>>y;
+    int res1=a+x;
+    int res2=b+y;
+    if(res1%2==1 && res2%2==1) cout<<"odd";
+    else if(res1%2==0 && res2%2==0) cout<<"even";
+    else cout<<"mix";
 }

@@ -5,7 +5,6 @@
 #include <queue>
 #include <stack>
 #include <map>
-#include <set>
 typedef long long ll;
 typedef long double lld;
 
@@ -13,7 +12,22 @@ using namespace std;
 
 void program()
 {
-    
+    int n;
+    cin>>n;
+    if(n==1) cout<<1;
+    else if(n==2) cout<<-1;
+    else
+    {
+        ll a=3;
+        cout<<1<<" "<<2<<" ";
+
+        for(int i=3;i<=n;i++)
+        {
+            cout<<a<<" ";
+            a*=2;
+        }
+    }
+    cout<<"\n";
 }
 
 int main()
