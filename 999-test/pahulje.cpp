@@ -1,9 +1,10 @@
-#include<iostream>
+#include <iostream>
+#include <string>
 using namespace std;
 
 int main()
 {
-    int a, b, n, m;
-    cin >> a >> b >> m >> n;
-    cout << m + n * ( a - b ) << endl;
+    string s;
+    getline(cin,s);
+    cout<<s;
 }
