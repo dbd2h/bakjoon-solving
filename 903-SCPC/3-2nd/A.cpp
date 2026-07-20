@@ -17,45 +17,61 @@ void program()
     cin>>n;
     string s;
     cin>>s;
-    if(s[n-1]=='A')
-    {
-        bool isB=false;
-        for(int i=0;i<n-1;i++)
-        {
-            if(s[i]=='B')
-            {
-                if(isB)
-                {
-                    cout<<"NO\n";
-                    return;
-                }
-                else isB=true;
-            }
-            else isB=false;
-        }
-    }
-    else if(s[n-1]=='B')
-    {
-        bool isA=false;
-        for(int i=0;i<n-1;i++)
-        {
-            if(s[i]=='A')
-            {
-                if(isA)
-                {
-                    cout<<"NO\n";
-                    return;
-                }
-                else isA=true;
-            }
-            else isA=false;
-        }   
-    }
-    else if(s[n-1]=='C')
+    bool isM=false;
+    bool isR=true;
+    int bef=s[n-1]-'A';
+    if(bef==2)
     {
         cout<<"NO\n";
         return;
     } 
+    if(bef==1) isR=false;
+    for(int i=n-2;i>=0;i--)
+    {
+        int cur=s[i]-'A';
+        if(cur==bef)
+        {
+            if(isM)
+            {
+                cout<<"NO\n";
+                return;
+            }
+        }
+        else if((cur-bef+3)%3==1)
+        {
+            if(isM)
+            {
+                isM=false;
+                isR=true;
+            }
+            else if(isR)
+            {
+                isM=true;
+            }
+            else
+            {
+                isR=true;
+            }
+        }
+        else if((cur-bef+3)%3==2)
+        {
+            if(isM)
+            {
+                isM=false;
+                isR=false;
+            }
+            else if(!isR)
+            {
+                isM=true;
+            }
+            else
+            {
+                isR=false;
+            }
+        }
+        bef=cur;
+    }
+
     cout<<"YES\n";
 }
 
