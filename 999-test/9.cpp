@@ -1,117 +1,50 @@
 #include <iostream>
-#include <queue>
+#include <string>
 #include <vector>
-#define INF 1e9
-
+#include <algorithm>
+#include <queue>
+#include <stack>
+#include <map>
 typedef long long ll;
+typedef long double lld;
 
 using namespace std;
 
-vector<int> graph[101];
-int lmatch[101]={0};
-int rmatch[101]={0};
-int dist[101];
-bool leftN[101]={0};
-bool rightN[101]={0};
-
-bool bfs(int n)
+void program()
 {
-    queue<int> q;
-    for(int i=1;i<=n;i++)
+    int n;
+    string s;
+    cin>>n>>s;
+    // s[i] : i번째로 작은 원판이 놓인 peg (s[0]=가장 작은 원판, s[n-1]=가장 큰 원판)
+    // 가장 큰 원판부터 훑으며 현재 구간의 from/to 를 갱신한다.
+    // 시작 구간: 전체를 A -> B
+    int from='A';
+    int to='B';
+    bool ok=true;
+    for(int i=n-1;i>=0;i--)
     {
-        if(lmatch[i]==0)
+        int via='A'+'B'+'C'-from-to;          // 나머지 페그
+        int diff=((to-'A')-(from-'A')+3)%3;   // 1=정방향(한 칸), 2=역방향(두 칸)
+        int d=s[i];
+        if(diff==1)                           // 정방향
         {
-            q.push(i);
-            dist[i]=0;
+            if(d==from) to=via;               // 앞 절반: from->via
+            else if(d==to) from=via;          // 뒤 절반: via->to
+            else { ok=false; break; }         // via에 있으면 최적 수열에 없음
         }
-        else dist[i]=INF;
-    }
-    bool found=false;
-    while(!q.empty())
-    {
-        int cur=q.front();
-        q.pop();
-        for(auto& r : graph[cur])
+        else                                  // 역방향
         {
-            int l=rmatch[r];
-            if(l==0) found=true;
-            else if(dist[l]==INF)
+            if(d==via)                        // 가운데 조각: to->from 으로 뒤집힘
             {
-                q.push(l);
-                dist[l]=dist[cur]+1;
+                int t=from; from=to; to=t;
             }
+            // d==from 또는 d==to 이면 from/to 유지 (역방향 그대로)
         }
     }
-    return found;
-}
-
-bool dfs(int cur)
-{
-    for(auto& r : graph[cur])
-    {
-        int l=rmatch[r];
-        if(l==0 || (dist[l]==dist[cur]+1 && dfs(l)))
-        {
-            lmatch[cur]=r;
-            rmatch[r]=cur;
-            return true;
-        }
-    }
-    dist[cur]=INF;
-    return false;
-}
-
-void resMaker(int cur, bool isL)
-{
-    if(isL)
-    {
-        if(leftN[cur]) return;
-        leftN[cur]=1;
-        for(auto& next : graph[cur])
-        {
-            if(lmatch[cur]==next) continue;
-            resMaker(next,!isL);
-            return;
-        }
-        return;
-    }
-    else
-    {
-        if(rightN[cur]) return;
-        rightN[cur]=1;
-        resMaker(rmatch[cur],!isL);
-        return;
-    }
+    cout<<(ok?"YES":"NO")<<"\n";
 }
 
 int main()
 {
-    ll n,d;
-    cin>>n>>d;
-    for(int i=0;i<d;i++)
-    {
-        int a,b;
-        cin>>a>>b;
-        graph[a].push_back(b);
-    }
-    int res=0;
-    while(bfs(n))
-    {
-        for(int i=1;i<=n;i++)
-        {
-            if(lmatch[i]==0 && dfs(i)) res++;
-        }
-    }
-    for(int i=1;i<=n;i++)
-    {
-        if(lmatch[i]==0) resMaker(i,1);
-    }
-    vector<int> resV;
-    for(int i=1;i<=n;i++) if(leftN[i]==1) resV.push_back(i);
-    cout<<n-res<<"\n";
-    for(auto& i : resV)
-    {
-        if(rightN[i]) continue;
-        cout<<i<<" ";
-    }
+    program();
 }

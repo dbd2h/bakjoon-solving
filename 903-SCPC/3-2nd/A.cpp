@@ -17,61 +17,33 @@ void program()
     cin>>n;
     string s;
     cin>>s;
-    bool isM=false;
-    bool isR=true;
-    int bef=s[n-1]-'A';
-    if(bef==2)
+    int from=0;
+    int to=1;
+    for(int i=n-1;i>=0;i--)
     {
-        cout<<"NO\n";
-        return;
-    } 
-    if(bef==1) isR=false;
-    for(int i=n-2;i>=0;i--)
-    {
+        int via=3-from-to;
         int cur=s[i]-'A';
-        if(cur==bef)
+        int diff=(to-from+3)%3;
+        if(diff==1)
         {
-            if(isM)
+            if(via==cur)
             {
                 cout<<"NO\n";
                 return;
             }
+            else if(from==cur) to=via;
+            else if(to==cur) from=via;
         }
-        else if((cur-bef+3)%3==1)
+        else if(diff==2)
         {
-            if(isM)
+            if(via==cur)
             {
-                isM=false;
-                isR=true;
-            }
-            else if(isR)
-            {
-                isM=true;
-            }
-            else
-            {
-                isR=true;
+                int c=from;
+                from=to;
+                to=c;
             }
         }
-        else if((cur-bef+3)%3==2)
-        {
-            if(isM)
-            {
-                isM=false;
-                isR=false;
-            }
-            else if(!isR)
-            {
-                isM=true;
-            }
-            else
-            {
-                isR=false;
-            }
-        }
-        bef=cur;
     }
-
     cout<<"YES\n";
 }
 
