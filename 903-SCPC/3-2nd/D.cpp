@@ -17,89 +17,104 @@ ll up[LEN];
 ll wArr[LEN*2];
 ll disArr[LEN*2];
 int pArr[LEN*2];
-vector<int> orderV;
+int orderArr[LEN];
+int par[LEN];
+int countArr[LEN];
 
-void dfs(int cur, int p)
+void dfs(int n)
 {
-    for(auto&nextP : graph[cur])
+    for(int i=n;i>=1;i--)
     {
-        int next=nextP.first;
-        int idx=nextP.second;
-        ll w=wArr[idx];
-        if(p==next) continue;
-        dfs(next,cur);
-        ll maxW=down[next][0][0]+w;
-        if(down[cur][0][0]<maxW)
+        int cur=orderArr[i];
+        for(auto&nextP : graph[cur])
         {
-            down[cur][1][0]=down[cur][0][0];
-            down[cur][1][1]=down[cur][0][1];
-            down[cur][0][0]=maxW;
-            down[cur][0][1]=next;
+            int next=nextP.first;
+            if(par[cur]==next) continue;
+            int idx=nextP.second;
+            ll w=wArr[idx];
+            ll maxW=down[next][0][0]+w;
+            if(down[cur][0][0]<maxW)
+            {
+                down[cur][1][0]=down[cur][0][0];
+                down[cur][1][1]=down[cur][0][1];
+                down[cur][0][0]=maxW;
+                down[cur][0][1]=next;
+            }
+            else if(down[cur][1][0]<maxW)
+            {
+                down[cur][1][0]=maxW;
+                down[cur][1][1]=next;
+            }
+            disArr[idx]=maxW;
         }
-        else if(down[cur][1][0]<maxW)
-        {
-            down[cur][1][0]=maxW;
-            down[cur][1][1]=next;
-        }
-        disArr[idx]=maxW;
     }
 }
 
-void dfs2(int cur, int p)
+void dfs2(int n)
 {
-    ll maxV=up[cur];
-    for(auto&nextP : graph[cur])
+    for(int i=1;i<=n;i++)
     {
-        int next=nextP.first;
-        int idx=nextP.second;
-        int ridx=idx + (idx%2 ? -1 : 1);
-        ll w=wArr[idx];
-        if(next==p) continue;
-        if(next==down[cur][0][1]) maxV=max(maxV,down[cur][1][0]);
-        else maxV=max(maxV,down[cur][0][0]);
-        up[next]=maxV+w;
-        disArr[ridx]=maxV+w;
-        dfs2(next,cur);
-    }
-}
-
-int dfs3(int cur, int p, ll num)
-{
-    int ret=1;
-    for(auto&nextP : graph[cur])
-    {
-        int next=nextP.first;
-        int idx=nextP.second;
-        if(next==p) continue;
-        int nextC=dfs3(next,cur,num);
-        if(disArr[idx]>num)
+        int cur=orderArr[i];
+        for(auto&nextP : graph[cur])
         {
-            pArr[idx]=nextC;
-            ret+=nextC;
+            ll maxV=up[cur];
+            int next=nextP.first;
+            int idx=nextP.second;
+            int ridx=idx + (idx%2 ? -1 : 1);
+            ll w=wArr[idx];
+            if(next==par[cur]) continue;
+            if(next==down[cur][0][1]) maxV=max(maxV,down[cur][1][0]);
+            else maxV=max(maxV,down[cur][0][0]);
+            up[next]=maxV+w;
+            disArr[ridx]=maxV+w;
         }
-        else pArr[idx]=0;
     }
-    return ret;
 }
 
-void dfs4(int cur, int p, ll num)
+void dfs3(ll num, int n)
 {
-    int nextC=1;
-    for(auto&nextP : graph[cur])
+    
+    for(int i=1;i<=n;i++) countArr[i]=1;
+    for(int i=n;i>=1;i--)
     {
-        int next=nextP.first;
-        int idx=nextP.second;
-        nextC+=pArr[idx];
+        int cur=orderArr[i];
+        int c=0;
+        for(auto&nextP : graph[cur])
+        {
+            int next=nextP.first;
+            int idx=nextP.second;
+            if(next==par[cur]) continue;
+            if(disArr[idx]>num)
+            {
+                pArr[idx]=countArr[next];
+                countArr[cur]+=countArr[next];
+            }
+            else pArr[idx]=0;
+        }
     }
-    for(auto&nextP : graph[cur])
+}
+
+void dfs4(ll num, int n)
+{
+    for(int i=1;i<=n;i++)
     {
-        int next=nextP.first;
-        int idx=nextP.second;
-        int ridx=idx + (idx%2 ? -1 : 1);
-        if(next==p) continue;
-        if(disArr[ridx]>num) pArr[ridx]=nextC-pArr[idx];
-        else pArr[ridx]=0;
-        dfs4(next,cur,num);
+        int cur=orderArr[i];
+        int nextC=1;
+        for(auto&nextP : graph[cur])
+        {
+            int next=nextP.first;
+            int idx=nextP.second;
+            nextC+=pArr[idx];
+        }
+        for(auto&nextP : graph[cur])
+        {
+            int next=nextP.first;
+            int idx=nextP.second;
+            int ridx=idx + (idx%2 ? -1 : 1);
+            if(next==par[cur]) continue;
+            if(disArr[ridx]>num) pArr[ridx]=nextC-pArr[idx];
+            else pArr[ridx]=0;
+        }
     }
 }
 
@@ -110,8 +125,8 @@ ll bs(ll l, ll r, int p, int n)
         return r+1;
     }
     ll mid=(l+r)/2;
-    dfs3(1,0,mid);
-    dfs4(1,0,mid);
+    dfs3(mid,n);
+    dfs4(mid,n);
     ll minV=(1e18);
     for(int i=1;i<=n;i++)
     {
@@ -132,14 +147,12 @@ void program()
 {
     int n;
     cin>>n;
-    orderV.clear();
-    bool check[LEN];
     for(int i=1;i<=n;i++)
     {
         graph[i].clear();
         down[i][0][0]=down[i][0][1]=down[i][1][0]=down[i][1][1]=0;
-        up[i]=0;
-        check[i]=1;
+        up[i]=0;    
+        par[i]=0;
     }
     for(int i=0;i<n-1;i++)
     {
@@ -151,28 +164,26 @@ void program()
         wArr[2*i]=w;
         wArr[2*i+1]=w;
     }
-    queue<int> q;
-    check[1]=1;
-    q.push(1);
-    while(!q.empty())
+    
+    orderArr[1]=1;
+    int idx=2;
+    for(int i=1;i<=n;i++)
     {
-        int cur=q.front();
-        q.pop();
-        orderV.push_back(cur);
-        for(auto&nextP : graph[cur])
+        int cur=orderArr[i];
+        for(auto& nextP : graph[cur])
         {
             int next=nextP.first;
-            if(check[next]) continue;
-            q.push(next);
-            check[next];
+            if(par[cur]==next) continue;
+            par[next]=cur;
+            orderArr[idx]=next;
+            idx++;
         }
     }
-    
     int p;
     cin>>p;
-    dfs(1,0);
-    dfs2(1,0);
-    cout<<bs(1,(1e12),p,n)<<endl;
+    dfs(n);
+    dfs2(n);
+    cout<<bs(0,(1e12),p,n)<<endl;
 }
 
 int main()

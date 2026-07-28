@@ -13,12 +13,58 @@ typedef long double lld;
 using namespace std;
 
 bool isPrime[LEN];
+int arr[5];
+bool bit[5];
+
+void Per(int len, int c, string &s, int *res)
+{
+    if(len==c)
+    {
+        bool isN[5]={0};
+        for(int i=0;i<=len;i++)
+        {
+            if(i==len)
+            {
+                *res=len;
+                break;
+            }
+            int cur=0;
+            for(int j=0;j<len;j++)
+            {
+                if(isN[j]) continue;
+                cur*=10;
+                cur+=s[j]-'0';
+            }
+            if(!isPrime[cur])
+            {
+                *res=max(*res,i);
+                break;
+            }
+            isN[arr[i]]=1;
+        }
+        return;
+    }
+    for(int i=0;i<len;i++)
+    {
+        if(bit[i]) continue;
+        bit[i]=1;
+        arr[c]=i;
+        Per(len,c+1,s,res);
+        bit[i]=0;
+    }
+}
 
 void program()
 {
     string a,b;
     cin>>a>>b;
-    
+    int resA=0;
+    int resB=0;
+    Per(a.size(),0,a,&resA);
+    Per(b.size(),0,b,&resB);
+    if(resA>resB) cout<<1<<"\n";
+    else if(resA<resB) cout<<2<<"\n";
+    else cout<<3<<"\n";
 }
 
 int main()
