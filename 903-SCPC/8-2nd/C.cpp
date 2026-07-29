@@ -12,42 +12,73 @@ typedef long double lld;
 
 using namespace std;
 
-int check[LEN][3][3][2];
-vector<pair<int,int>> graph[LEN];
+vector<int> graph[LEN*3];
+vector<int> G[LEN];
+vector<int> rG[LEN];
+stack<int> st;
+bool check[LEN];
+int sccId[LEN];
+int sccCount;
+
+void dfs1(int cur)
+{
+    check[cur]=1;
+    for(auto&next : G[cur])
+    {
+        if(check[next]) continue;
+        dfs1(next);
+    }
+    st.push(cur);
+}
+
+void dfs2(int cur)
+{
+    sccId[cur]=sccCount;
+    for(auto&next : rG[cur])
+    {
+        if(sccId[next]!=0) continue;
+        dfs2(next);
+    }
+}
 
 void program()
 {
     int n,m,k;
     cin>>n>>m>>k;
+    for(int i=1;i<=n*3;i++) graph[i].clear();
     for(int i=1;i<=n;i++)
     {
-        graph[i].clear();
-        for(int j=0;j<3;j++)
-        {
-            for(int l=0;l<3;l++) check[i][j][l][0]=check[i][j][l][1]=-1;
-        }
+        G[i].clear();
+        rG[i].clear();
+        sccId[i]=0;
+        sccCount=0;
+        check[i]=0;
     }
-    queue<pair<pair<int,int>,pair<int,int>>> q; // cur, alpha, count, k
     for(int i=0;i<m;i++)
     {
         int a,b;
         char c;
         cin>>a>>b>>c;
-        graph[a].push_back({b,c-'A'});
-        check[a][c-'A'][2][0]=check[a][c-'A'][1][0]=check[a][c-'A'][0][0]=0;
-        check[a][c-'A'][2][1]=check[a][c-'A'][1][1]=check[a][c-'A'][0][1]=a;
+        if(c=='B') graph[a*3-2].push_back(b*3-1);
+        if(c=='C') graph[a*3-1].push_back(b*3);
+        if(c=='A') graph[a*3].push_back(b*3-2);
+        G[a].push_back(b);
+        rG[b].push_back(a);
     }
-    for(int i=1;i<=n;i++) q.push({{i,-1},{0,k}});
-    while(!q.empty())
+    for(int i=1;i<=n;i++)
     {
-        int cur=q.front().first.first;
-        int alpha=q.front().first.second;
-        int c=q.front().second.first;
-        int rem=q.front().second.second;
-        q.pop();
-        if(alpha!=-1 && check[cur][alpha][rem][0]>c) continue;
-
+        if(check[i]) continue;
+        dfs1(i);
     }
+    while(!st.empty())
+    {
+        int cur=st.top();
+        st.pop();
+        if(sccId[cur]!=0) continue;
+        sccCount++;
+        dfs2(cur);
+    }
+    
 }
 
 int main()
