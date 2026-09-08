@@ -16,6 +16,7 @@ using namespace std;
 ll dp[LEN]={0};
 ll arr[LEN];
 
+int main()
 {
     int n,s;
     cin>>n>>s;
